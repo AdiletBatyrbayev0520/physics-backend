@@ -17,7 +17,23 @@ class PhysicsSolverAgent:
         prompt = f"""
         You are an expert university physics professor. 
         Solve the following physics problem carefully. 
-        Pay strict attention to units, unit conversions (e.g., nC to C, cm to m), and significant figures.
+        
+        Requirements:
+        1. Provide a concise and catchy title for the problem.
+        2. Identify the core subject. 
+        3. Assign a difficulty level.
+        4. Extract the known variables. For each:
+           - 'name': The mathematical symbol (e.g., 'q_1', 'R', '\\mu_0').
+           - 'value': The numerical value and unit (e.g., '4.0 \\times 10^{{-9}} \\text{{ C }}', '120 \\text{{ m }}').
+           - 'description': What it represents (e.g., 'Initial charge', 'Radius').
+        5. Break down the solution into steps with titles, content, and RAW LaTeX (without delimiters like $ or \\( ).
+        6. Provide a final numerical answer. Use RAW LaTeX for the 'value' field.
+        7. IMPORTANT LaTeX RULES: 
+           - For 'name', 'value', and 'math' fields, use RAW LaTeX without delimiters. 
+           - NEVER include \\\\ or \\newline at the end of a formula.
+           - In display math/BlockMath, avoid using \\\\ unless you are inside an environment like 'aligned'.
+           - Keep LaTeX pure and symbolic. Put descriptive text in 'description' or 'content' fields.
+        8. Pay strict attention to units and significant figures.
         
         Problem:
         {problem_text}
@@ -43,8 +59,16 @@ class PhysicsSolverAgent:
         default_prompt = """
         You are an expert university physics professor. 
         An image of a physics problem is provided. 
-        1. Extract the problem statement from the image.
-        2. Solve it carefully, paying strict attention to units and significant figures.
+        
+        1. Extract the problem statement from the image and use it as the description.
+        2. Provide a concise and catchy title for the problem.
+        3. Identify the core subject. 
+        4. Assign a difficulty level.
+        5. Extract the known variables. Use 'name' for the symbol, 'value' for the value/unit, and 'description' for the text description.
+        6. Break down the solution into clear, logical steps with titles, content, and RAW LaTeX (without delimiters).
+        7. Provide a final numerical answer. Use RAW LaTeX for the 'value' field.
+        8. IMPORTANT: For ALL 'name', 'value', and 'math' fields, use RAW LaTeX. Do NOT use \\\\ or \\newline at the end of a formula.
+        9. Pay strict attention to units, unit conversions, and significant figures.
         """
         
         prompt = custom_prompt if custom_prompt else default_prompt
@@ -67,5 +91,3 @@ class PhysicsSolverAgent:
         solution = PhysicsSolution.model_validate_json(response.text)
         logger.info("Successfully generated physics solution from image.")
         return solution
-
-

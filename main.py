@@ -27,4 +27,4 @@ if __name__ == "__main__":
     port = settings.PORT
     
     logger.info(f"Starting server on http://localhost:{port}")
-    uvicorn.run(app, host="127.0.0.1", port=port)
+    uvicorn.run("main:app", host="127.0.0.1", port=port, reload=True)
