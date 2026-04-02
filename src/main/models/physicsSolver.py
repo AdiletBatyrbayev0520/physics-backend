@@ -3,6 +3,7 @@ import string
 import time
 from typing import Optional
 from pydantic import BaseModel, Field
+from fastapi import UploadFile, File, Form
 
 class Variable(BaseModel):
     name: str = Field(
@@ -41,3 +42,7 @@ class ProblemRequest(BaseModel):
         ..., 
         example="A point charge q = +3.0 nC. Find the electric field magnitude E at a distance r = 0.20 m."
     )
+
+class ImageProblemRequest(BaseModel):
+    file: UploadFile = File(...)
+    prompt: Optional[str] = Form(None)

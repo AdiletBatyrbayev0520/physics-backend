@@ -1,7 +1,7 @@
 from src.main.services import PhysicsSolverAgent
-from src.main.models import PhysicsSolution, ProblemRequest
+from src.main.models import PhysicsSolution, ProblemRequest, ImageProblemRequest
 from src.main.core import logger
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form
+from fastapi import APIRouter, HTTPException
 from typing import Optional
 
 router = APIRouter()
@@ -19,21 +19,20 @@ async def solve_problem(request: ProblemRequest):
 
 @router.post("/solve/image", response_model=PhysicsSolution)
 async def solve_problem_image(
-    file: UploadFile = File(...),
-    prompt: Optional[str] = Form(None)
+    request: ImageProblemRequest
 ):
-    logger.info(f"Received image solving request. File: {file.filename}, Content-type: {file.content_type}")
+    logger.info(f"Received image solving request. File: {request.file.filename}, Content-type: {request.file.content_type}")
     
-    if not file.content_type.startswith("image/"):
-        logger.warning(f"Invalid file type: {file.content_type}")
+    if not request.file.content_type.startswith("image/"):
+        logger.warning(f"Invalid file type: {request.file.content_type}")
         raise HTTPException(status_code=400, detail="File must be an image.")
     
     try:
-        image_bytes = await file.read()
+        image_bytes = await request.file.read()
         solution = agent.solve_with_image(
             image_bytes=image_bytes,
-            mime_type=file.content_type,
-            custom_prompt=prompt
+            mime_type=request.file.content_type,
+            custom_prompt=request.prompt
         )
         return solution
     except Exception as e:

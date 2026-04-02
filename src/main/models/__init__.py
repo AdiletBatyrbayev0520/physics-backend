@@ -1,1 +1,1 @@
-from .physicsSolver import PhysicsSolution, ProblemRequest, Variable
+from .physicsSolver import PhysicsSolution, ProblemRequest, Variable, ImageProblemRequest
