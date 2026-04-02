@@ -1,0 +1,1 @@
+There should be compiler, calculator, solver that takes inputs, try some formulas, this formulas executes in special service and returns result to the agent. Then agent decides what to do next. It can create a lot of formulas and try them. All static coefficients will be in the backend. While solving, it should use units and convert them if needed. 
